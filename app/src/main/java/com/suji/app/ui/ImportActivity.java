@@ -213,7 +213,7 @@ public class ImportActivity extends AppCompatActivity {
             }
             edRaw.setText(text);
             tvStatus.setVisibility(View.GONE);
-            parseLocal();
+            parseFileContent(text, name);
         });
         if (name != null) {
             tvStatus.setText("正在读取 " + name + "…");
@@ -241,9 +241,33 @@ public class ImportActivity extends AppCompatActivity {
             return;
         }
         hideKeyboard();
-        List<Card> cards = Parser.parse(raw);
+        List<Card> cards = parseContent(raw, null);
         if (cards.isEmpty()) {
             Toast.makeText(this, "没解析出内容，检查一下格式", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        showPreview(cards, "解析出 " + cards.size() + " 条");
+    }
+
+    /** 根据文件后缀选择解析方式：.json / .csv / 其它按纯文本。 */
+    private List<Card> parseContent(String content, String fileName) {
+        if (fileName != null) {
+            String lower = fileName.toLowerCase();
+            if (lower.endsWith(".json")) {
+                return Parser.parseJson(content);
+            }
+            if (lower.endsWith(".csv")) {
+                return Parser.parseCsv(content);
+            }
+        }
+        return Parser.parse(content);
+    }
+
+    private void parseFileContent(String content, String fileName) {
+        hideKeyboard();
+        List<Card> cards = parseContent(content, fileName);
+        if (cards.isEmpty()) {
+            Toast.makeText(this, "没解析出内容，检查一下文件格式", Toast.LENGTH_SHORT).show();
             return;
         }
         showPreview(cards, "解析出 " + cards.size() + " 条");
