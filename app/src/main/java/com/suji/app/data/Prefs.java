@@ -111,6 +111,15 @@ public class Prefs {
         sp.edit().putBoolean("shuffle", v).apply();
     }
 
+    /** 双向复习：开启后每张卡随机从正面或背面开始，正反两个方向都练。 */
+    public boolean bidirectional() {
+        return sp.getBoolean("bidirectional", false);
+    }
+
+    public void setBidirectional(boolean v) {
+        sp.edit().putBoolean("bidirectional", v).apply();
+    }
+
     private static int clamp(int v, int min, int max) {
         return Math.max(min, Math.min(max, v));
     }

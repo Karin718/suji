@@ -49,6 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText edNewPerDay;
     private EditText edReviewPerDay;
     private SwitchMaterial swShuffle;
+    private SwitchMaterial swBidirectional;
     private SwitchMaterial swReminder;
     private TextView tvReminderTime;
     private TextView tvIntervals;
@@ -95,6 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
         edNewPerDay = findViewById(R.id.edNewPerDay);
         edReviewPerDay = findViewById(R.id.edReviewPerDay);
         swShuffle = findViewById(R.id.swShuffle);
+        swBidirectional = findViewById(R.id.swBidirectional);
         swReminder = findViewById(R.id.swReminder);
         tvReminderTime = findViewById(R.id.tvReminderTime);
         tvIntervals = findViewById(R.id.tvIntervals);
@@ -161,6 +163,7 @@ public class SettingsActivity extends AppCompatActivity {
         edNewPerDay.setText(String.valueOf(prefs.newPerDay()));
         edReviewPerDay.setText(String.valueOf(prefs.reviewPerDay()));
         swShuffle.setChecked(prefs.shuffle());
+        swBidirectional.setChecked(prefs.bidirectional());
         swReminder.setChecked(prefs.reminderEnabled());
         tvReminderTime.setText(formatTime(prefs.reminderHour(), prefs.reminderMinute()));
         tvReminderTime.setAlpha(prefs.reminderEnabled() ? 1f : 0.5f);
@@ -228,6 +231,7 @@ public class SettingsActivity extends AppCompatActivity {
         prefs.setNewPerDay(newPerDay);
         prefs.setReviewPerDay(reviewPerDay);
         prefs.setShuffle(swShuffle.isChecked());
+        prefs.setBidirectional(swBidirectional.isChecked());
         prefs.setReminderEnabled(swReminder.isChecked());
         prefs.setAiBaseUrl(text(edBaseUrl));
         prefs.setAiModel(text(edModel));

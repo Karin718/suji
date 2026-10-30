@@ -139,8 +139,14 @@ public class StudyActivity extends AppCompatActivity {
         Card card = queue.get(index);
         revealed = false;
 
-        tvFront.setText(card.front);
-        tvBack.setText(card.back == null || card.back.trim().isEmpty() ? "（这张卡没有背面）" : card.back);
+        // 双向复习：随机决定从哪一面开始
+        boolean hasBack = card.back != null && !card.back.trim().isEmpty();
+        boolean swapped = hasBack && repo.prefs().bidirectional() && Math.random() < 0.5;
+        String question = swapped ? card.back : card.front;
+        String answer = swapped ? card.front : card.back;
+
+        tvFront.setText(question);
+        tvBack.setText(answer == null || answer.trim().isEmpty() ? "（这张卡没有背面）" : answer);
         tvBack.setVisibility(View.GONE);
         divider.setVisibility(View.GONE);
 
