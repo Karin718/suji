@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速记 · 界面预览</title>
+<style>
+  :root{
+    --brand:#5B5BD6; --brand-container:#E3E3FF; --bg:#F6F6FB; --surface:#FFFFFF;
+    --text:#17171F; --text2:#6A6A7A; --outline:#E0E0EA; --ok:#15803D;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#EEEEF5;color:var(--text);}
+  .page{padding:28px 20px 60px;}
+  h1{font-size:22px; margin-bottom:4px;}
+  .sub{color:var(--text2); font-size:13px; margin-bottom:24px; line-height:1.7;}
+  .phones{display:flex; flex-wrap:wrap; gap:28px;}
+  .phone{width:300px; background:var(--bg); border-radius:28px; padding:16px; box-shadow:0 10px 30px rgba(30,30,80,.12);}
+  .bar{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; font-weight:700; font-size:15px;}
+  .bar .icons{display:flex; gap:8px;}
+  .ico{width:22px; height:22px; border-radius:6px; background:var(--text2); opacity:.5;}
+  .cap{font-size:12px; color:var(--text2); text-align:center; margin-top:12px;}
+  .hero{background:var(--brand-container); border-radius:18px; padding:16px; margin-bottom:16px;}
+  .hero .lbl{font-size:12px; color:#4a4a8a;}
+  .hero .row{display:flex; margin-top:8px; gap:10px;}
+  .hero .num{font-size:30px; font-weight:800; color:#17174f;}
+  .hero .cell{flex:1;}
+  .hero .cell small{color:#4a4a8a; font-size:11px;}
+  .btn{background:var(--brand); color:#fff; text-align:center; border-radius:13px; padding:13px; margin-top:14px; font-weight:600; font-size:14px;}
+  .deck{background:var(--surface); border:1px solid var(--outline); border-radius:14px; padding:12px 14px; margin-bottom:10px; display:flex; align-items:center; gap:12px;}
+  .dot{width:10px; height:10px; border-radius:50%; background:var(--brand);}
+  .deck .tt{font-weight:700; font-size:14px;}
+  .deck .mm{font-size:11px; color:var(--text2); margin-top:2px;}
+  .badge{margin-left:auto; background:var(--brand-container); color:#4a4a8a; font-size:11px; font-weight:700; padding:4px 9px; border-radius:99px;}
+  .card{background:var(--surface); border:1px solid var(--outline); border-radius:18px; padding:22px 18px; text-align:center; margin-top:8px; min-height:220px; cursor:pointer; user-select:none;}
+  .card .q{font-size:20px; font-weight:700; line-height:1.5;}
+  .card .div{width:40px; height:2px; background:var(--outline); margin:18px auto;}
+  .card .a{font-size:15px; line-height:1.6; color:#3a3a4a;}
+  .card .hint{font-size:12px; color:var(--text2); margin-top:16px;}
+  .grades{display:flex; gap:8px; margin-top:14px;}
+  .g{flex:1; text-align:center; border-radius:12px; padding:13px 0; font-size:14px; font-weight:600;}
+  .g.forgot{color:#BE123C; border:1.5px solid #BE123C;}
+  .g.vague{background:#EDEDF7; color:#4a4a8a;}
+  .g.good{background:var(--brand); color:#fff;}
+  .progress{height:5px; background:#E8E8F2; border-radius:99px; margin:10px 0;}
+  .progress > i{display:block; height:5px; width:28%; background:var(--brand); border-radius:99px;}
+  .area{border:1px solid var(--outline); background:var(--surface); border-radius:12px; padding:12px; font-size:13px; color:var(--text2); min-height:110px; line-height:1.7;}
+  .chip{display:inline-block; background:var(--surface); border:1px solid var(--outline); border-radius:8px; padding:6px 10px; font-size:12px; color:var(--text2); margin:4px 4px 0 0;}
+  .stat{display:flex; gap:10px;}
+  .stat .box{flex:1; background:var(--surface); border:1px solid var(--outline); border-radius:14px; padding:14px; text-align:center;}
+  .stat .n{font-size:24px; font-weight:800;}
+  .stat .l{font-size:11px; color:var(--text2); margin-top:3px;}
+  .bars{display:flex; align-items:flex-end; gap:14px; height:120px; padding:0 6px; margin-top:14px;}
+  .bars .b{flex:1; background:var(--brand); border-radius:6px 6px 0 0; opacity:.85;}
+  .bars .x{flex:1; text-align:center; font-size:11px; color:var(--text2); margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>速记 · 界面预览</h1>
+  <div class="sub">下面是在浏览器里做的静态界面示意（非真实 App，仅看设计风格与交互走向）。<br>真正的安卓 App 用 Android Studio / GitHub Actions 构建，见 README.md。</div>
+
+  <div class="phones">
+
+    <!-- 首页 -->
+    <div>
+      <div class="phone">
+        <div class="bar">速记 <span class="icons"><span class="ico"></span><span class="ico"></span></span></div>
+        <div class="hero">
+          <div class="lbl">今天要复习</div>
+          <div class="row">
+            <div class="cell"><div class="num">6</div><small>张待复习</small></div>
+            <div class="cell"><div class="num">14</div><small>张新卡可学</small></div>
+          </div>
+          <div class="btn">开始复习</div>
+        </div>
+        <div class="deck"><span class="dot"></span><div><div class="tt">考研英语核心词</div><div class="mm">380 张 · 待复习 6</div></div><span class="badge">今日 6</span></div>
+        <div class="deck"><span class="dot" style="background:#F59E0B"></span><div><div class="tt">古诗文必背</div><div class="mm">120 张 · 新卡 120</div></div><span class="badge">新 120</span></div>
+        <div class="deck"><span class="dot" style="background:#10B981"></span><div><div class="tt">法考民诉 · 名词</div><div class="mm">95 张 · 已全部掌握</div></div></div>
+      </div>
+      <div class="cap">① 首页 · 今日复习 + 背诵本</div>
+    </div>
+
+    <!-- 学习卡片 -->
+    <div>
+      <div class="phone">
+        <div class="bar">复习 <span class="icons"><span class="ico"></span></span></div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text2);"><span>3 / 20</span><span>考研英语核心词</span></div>
+        <div class="progress"><i></i></div>
+        <div class="card" id="fc">
+          <div class="q" id="fc-q">abandon</div>
+          <div class="div" id="fc-div" style="display:none"></div>
+          <div class="a" id="fc-a" style="display:none">v. 放弃；抛弃；遗弃<br><span style="font-size:12px;color:var(--text2)">a + band(乐队) + on：乐队解散了，只好放弃</span></div>
+          <div class="hint" id="fc-hint">先在心里想一想，再点卡片看答案</div>
+        </div>
+        <div class="grades">
+          <div class="g forgot">忘记</div>
+          <div class="g vague">模糊</div>
+          <div class="g good">记得</div>
+        </div>
+      </div>
+      <div class="cap">② 学习卡片 · 先回忆再翻面，按记忆程度打分</div>
+    </div>
+
+    <!-- 导入 -->
+    <div>
+      <div class="phone">
+        <div class="bar">导入内容 <span class="icons"><span class="ico"></span></span></div>
+        <div class="area">abandon ---- v. 放弃<br>benevolent：adj. 仁慈的<br>eloquent\tadj. 雄辩的<br>《静夜思》下一句<br>低头思故乡</div>
+        <div class="chip">每行一张卡 · ---- 或 ： 分隔正反面</div>
+        <div class="chip">也支持 .txt / .csv / .json</div>
+        <div class="btn">解析预览 →</div>
+      </div>
+      <div class="cap">③ 导入 · 粘贴 / 选文件，先预览再确认</div>
+    </div>
+
+    <!-- AI 整理 -->
+    <div>
+      <div class="phone">
+        <div class="bar">AI 整理 <span class="icons"><span class="ico"></span></span></div>
+        <div class="area" style="min-height:96px">把这段专业课讲义贴进来……深度学习通过多层神经网络自动提取特征，区别于传统机器学习依赖人工特征工程……</div>
+        <div class="chip">方式：问答式 ▾</div>
+        <div class="chip">整理为：术语解释 ▾</div>
+        <div class="btn" style="background:#EDEDF7; color:#4a4a8a">✨ 让 AI 整理</div>
+        <div class="btn">导入选中 6 条</div>
+      </div>
+      <div class="cap">④ AI 整理 · 丢原始资料，自动拆成卡片</div>
+    </div>
+
+    <!-- 统计 -->
+    <div>
+      <div class="phone">
+        <div class="bar">学习统计 <span class="icons"><span class="ico"></span></span></div>
+        <div class="stat">
+          <div class="box"><div class="n">18</div><div class="l">今日复习</div></div>
+          <div class="box"><div class="n">12</div><div class="l">连续打卡（天）</div></div>
+        </div>
+        <div class="stat" style="margin-top:10px">
+          <div class="box"><div class="n">595</div><div class="l">卡片总数</div></div>
+          <div class="box"><div class="n">320</div><div class="l">已掌握</div></div>
+        </div>
+        <div style="font-size:12px; color:var(--text2); margin-top:18px;">最近 7 天</div>
+        <div class="bars" style="height:90px">
+          <div class="b" style="height:30px"></div><div class="b" style="height:55px"></div>
+          <div class="b" style="height:70px"></div><div class="b" style="height:40px"></div>
+          <div class="b" style="height:85px"></div><div class="b" style="height:60px"></div>
+          <div class="b" style="height:48px"></div>
+        </div>
+        <div style="display:flex; gap:14px; padding:0 6px;">
+          <div class="x">一</div><div class="x">二</div><div class="x">三</div><div class="x">四</div><div class="x">五</div><div class="x">六</div><div class="x">日</div>
+        </div>
+      </div>
+      <div class="cap">⑤ 统计 · 打卡 / 掌握情况 / 近 7 天</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const card = document.getElementById('fc');
+  card.addEventListener('click', function(){
+    document.getElementById('fc-a').style.display = 'block';
+    document.getElementById('fc-div').style.display = 'block';
+    document.getElementById('fc-hint').style.display = 'none';
+  });
+</script>
+</body>
+</html>

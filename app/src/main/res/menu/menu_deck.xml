@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_import"
+        android:icon="@drawable/ic_file"
+        android:title="导入内容"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_rename"
+        android:title="重命名背诵本"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete"
+        android:title="删除背诵本"
+        app:showAsAction="never" />
+</menu>

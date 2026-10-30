@@ -1,0 +1,57 @@
+name: Build & Release APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7'
+
+      - name: Build release APK
+        run: gradle assembleRelease --no-daemon
+
+      - name: Extract version name
+        id: version
+        run: |
+          VERSION=$(grep -o 'versionName "[^"]*"' app/build.gradle | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Publish latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          VERSION="${{ steps.version.outputs.version }}"
+          cp app/build/outputs/apk/release/app-release.apk "suji-v${VERSION}.apk"
+          # 覆盖旧的 latest 标签，让 App 的「检查更新」总能拿到最新构建
+          gh release delete latest --yes 2>/dev/null || true
+          git push origin --delete latest 2>/dev/null || true
+          gh release create latest "suji-v${VERSION}.apk" \
+            --title "v${VERSION}" \
+            --notes "速记 v${VERSION} 自动构建。点击下方 APK 下载安装，或直接在 App 内「设置 → 检查更新」。"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: suji-release-apk
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
