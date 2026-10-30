@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -103,6 +105,49 @@ public final class Updater {
             }
         }
         return info;
+    }
+
+    public interface ProgressListener {
+        void onProgress(int percent);
+    }
+
+    /** 下载 APK 到指定目录，返回文件。失败抛异常。 */
+    public static File downloadApk(String url, File dir, ProgressListener listener) throws Exception {
+        if (url == null || url.isEmpty()) {
+            throw new Exception("下载地址为空");
+        }
+        if (!dir.exists() && !dir.mkdirs()) {
+            throw new Exception("无法创建下载目录");
+        }
+        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.setConnectTimeout(15000);
+        conn.setReadTimeout(60000);
+        conn.setRequestProperty("User-Agent", "Suji-App");
+        conn.setInstanceFollowRedirects(true);
+        int code = conn.getResponseCode();
+        if (code < 200 || code >= 300) {
+            conn.disconnect();
+            throw new Exception("下载失败：HTTP " + code);
+        }
+        int total = conn.getContentLength();
+        File file = new File(dir, "suji-update.apk");
+        InputStream in = conn.getInputStream();
+        FileOutputStream out = new FileOutputStream(file);
+        byte[] buf = new byte[8192];
+        int read;
+        int done = 0;
+        while ((read = in.read(buf)) > 0) {
+            out.write(buf, 0, read);
+            done += read;
+            if (listener != null && total > 0) {
+                int pct = (int) (done * 100L / total);
+                listener.onProgress(Math.max(0, Math.min(100, pct)));
+            }
+        }
+        out.close();
+        in.close();
+        conn.disconnect();
+        return file;
     }
 
     private static String stripV(String s) {

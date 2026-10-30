@@ -3,7 +3,9 @@ package com.suji.app.ui;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -15,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -33,6 +36,7 @@ import com.suji.app.util.FileIo;
 import com.suji.app.util.Reminder;
 import com.suji.app.util.Updater;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -313,18 +317,74 @@ public class SettingsActivity extends AppCompatActivity {
                 .setTitle("发现新版本 v" + info.version)
                 .setMessage(msg)
                 .setNegativeButton("稍后再说", null)
-                .setPositiveButton("去下载", (dialog, which) -> {
-                    if (url == null || url.isEmpty()) {
-                        Toast.makeText(this, "没有找到下载链接", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                    } catch (Exception e) {
-                        Toast.makeText(this, "无法打开下载链接", Toast.LENGTH_SHORT).show();
-                    }
-                })
+                .setNeutralButton("浏览器下载", (dialog, which) -> openBrowser(url))
+                .setPositiveButton("立即更新", (dialog, which) -> downloadAndInstall(url))
                 .show();
+    }
+
+    private void openBrowser(String url) {
+        if (url == null || url.isEmpty()) {
+            Toast.makeText(this, "没有找到下载链接", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        } catch (Exception e) {
+            Toast.makeText(this, "无法打开链接", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void downloadAndInstall(final String apkUrl) {
+        if (apkUrl == null || apkUrl.isEmpty()) {
+            Toast.makeText(this, "没有找到下载链接", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                && !getPackageManager().canRequestPackageInstalls()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("需要允许安装")
+                    .setMessage("为了能直接在 App 里升级，需要允许「速记」安装应用。请在随后打开的设置页里开启。")
+                    .setNegativeButton("取消", null)
+                    .setPositiveButton("去开启", (dialog, which) -> {
+                        try {
+                            Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                    Uri.parse("package:" + getPackageName()));
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            Toast.makeText(this, "请到系统设置里允许「速记」安装未知应用", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .show();
+            return;
+        }
+        tvUpdateResult.setText("正在下载更新…");
+        final File dir = new File(getExternalFilesDir(null), "apk");
+        Async.io(() -> {
+            try {
+                File apk = Updater.downloadApk(apkUrl, dir, percent ->
+                        Async.ui(() -> tvUpdateResult.setText("正在下载更新 " + percent + "%")));
+                Async.ui(() -> {
+                    tvUpdateResult.setText("下载完成，正在安装…");
+                    installApk(apk);
+                });
+            } catch (Exception e) {
+                String msg = e.getMessage() == null ? "未知错误" : e.getMessage();
+                Async.ui(() -> tvUpdateResult.setText("下载失败：" + msg + "。可点「浏览器下载」或到 GitHub 网页手动下载。"));
+            }
+        });
+    }
+
+    private void installApk(File apkFile) {
+        try {
+            Uri apkUri = FileProvider.getUriForFile(this, "com.suji.app.fileprovider", apkFile);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "无法启动安装，请到 GitHub 网页手动下载", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void exportBackup() {
